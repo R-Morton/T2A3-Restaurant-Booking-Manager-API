@@ -10,3 +10,8 @@ class User(db.Model):
     name = db.Column(db.String())
     manager = db.Column(db.Boolean())
 
+    venue_id = db.Column(
+        db.Integer(), db.ForeignKey("venues.id"), nullable=False
+        )
+
+    venue = db.relationship('Venue', backref='user')

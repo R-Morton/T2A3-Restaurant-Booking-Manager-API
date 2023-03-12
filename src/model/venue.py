@@ -9,9 +9,3 @@ class Venue(db.Model):
     max_indoor_seating = db.Column(db.Integer(), nullable=False)
     max_outdoor_seating = db.Column(db.Integer(), nullable=False)
     trading_hours = db.Column(db.String())
-
-    user_id = db.Column(
-        db.Integer(), db.ForeignKey("users.id"), nullable=False
-        )
-
-    user = db.relationship('User', backref='venue')
