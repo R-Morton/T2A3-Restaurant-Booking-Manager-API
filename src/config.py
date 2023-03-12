@@ -9,12 +9,12 @@ class Config(object):
 
         if not db_url:
             raise ValueError("DATABASE_URL is not set")
-
+        
         return db_url
 
 class DevelopmentConfig(Config):
     DEBUG = True
-
+ 
 class ProductionConfig(Config):
     pass
 

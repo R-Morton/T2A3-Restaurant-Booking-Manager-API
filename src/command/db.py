@@ -1,5 +1,9 @@
 from flask import Blueprint
 from main import db
+from model.user import User
+from model.venue import Venue
+from model.booking import Booking
+from model.customer import Customer
 
 db_cmd = Blueprint("db", __name__)
 
