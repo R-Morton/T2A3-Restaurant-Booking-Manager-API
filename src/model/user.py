@@ -9,13 +9,24 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String(), nullable=False, unique=True)
     password = db.Column(db.String(), nullable=False)
     name = db.Column(db.String())
-    security_level = db.Column(db.Integer())
 
     venue_id = db.Column(
         db.Integer(), db.ForeignKey("venues.id"), nullable=False
         )
 
     venue = db.relationship('Venue', backref='user')
+    roles = db.relationship('Role', secondary='user_roles')
 
     def allowed(self, security_level):
         return self.security_level >= security_level
+
+class Role(db.Model):
+    __tablename__ = 'roles'
+    id = db.Column(db.Integer(), primary_key=True)
+    name = db.Column(db.String(50), unique=True)
+
+class UserRoles(db.Model):
+    __tablename__ = 'user_roles'
+    id = db.Column(db.Integer(), primary_key=True)
+    user_id = db.Column(db.Integer(), db.ForeignKey('users.id'))
+    role_id = db.Column(db.Integer(), db.ForeignKey('roles.id'))

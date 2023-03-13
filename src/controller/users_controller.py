@@ -1,9 +1,9 @@
 from flask import Blueprint, request
 from schema.users_schema import user_schema, users_schema
-from model.user import User
+from model.user import User, Role
 from main import db, login_manager
 from flask_login import LoginManager, login_user, login_required, logout_user
-import functools
+
 
 user = Blueprint('user', __name__, url_prefix='/users')
 
@@ -33,6 +33,7 @@ def register_user():
     user_fields = user_schema.load(request.json)
 
     user = User(**user_fields)
+    user.roles = ["Admin"]
 
     db.session.add(user)
     db.session.commit()
