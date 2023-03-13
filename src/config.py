@@ -3,10 +3,11 @@ import os
 class Config(object):
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
+
     @property
     def SQLALCHEMY_DATABASE_URI(self):
         db_url = os.environ.get("DATABASE_URL")
-
+        
         if not db_url:
             raise ValueError("DATABASE_URL is not set")
         

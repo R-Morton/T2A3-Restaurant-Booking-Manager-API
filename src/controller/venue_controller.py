@@ -2,6 +2,7 @@ from flask import Blueprint, request
 from schema.venues_schema import venue_schema, venues_schema
 from model.venue import Venue
 from main import db
+from controller.users_controller import check_access
 
 venue = Blueprint('venue', __name__, url_prefix='/venues')
 
@@ -19,6 +20,7 @@ def get_venue(id):
     return venue_schema.dump(venue)
 
 @venue.post("/register")
+@check_access(3)
 def register_venue():
     venue_fields = venue_schema.load(request.json)
 
