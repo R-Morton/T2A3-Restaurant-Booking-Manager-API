@@ -31,14 +31,18 @@ def get_user(id):
 @user.post("/register")
 def register_user():
     user_fields = user_schema.load(request.json)
-
     user = User(**user_fields)
-    user.roles = ["Admin"]
+    role = Role.query.filter_by(id=user.roles).first()
+    user.roles = [role,]
 
-    db.session.add(user)
-    db.session.commit()
+    email = user.email
+    if User.query.filter_by(email=email).first():
+        return {"message": "This email address is already in use. Please login"}
+    else:
+        db.session.add(user)
+        db.session.commit()
 
-    return user_schema.dump(user)
+        return user_schema.dump(user)
 
 @user.route('/login')
 def user_login():
