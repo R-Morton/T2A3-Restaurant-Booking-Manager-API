@@ -11,14 +11,10 @@ class User(db.Model, UserMixin):
     name = db.Column(db.String())
 
     venue_id = db.Column(
-        db.Integer(), db.ForeignKey("venues.id"), nullable=False
-        )
+        db.Integer(), db.ForeignKey("venues.id"))
 
     venue = db.relationship('Venue', backref='user')
     roles = db.relationship('Role', secondary='user_roles')
-
-    def allowed(self, security_level):
-        return self.security_level >= security_level
 
 class Role(db.Model):
     __tablename__ = 'roles'

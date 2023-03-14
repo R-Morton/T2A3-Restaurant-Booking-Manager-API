@@ -1,5 +1,6 @@
 from flask import Blueprint, request
 from schema.users_schema import user_schema, users_schema
+from schema.roles_schema import role_schema
 from model.user import User, Role
 from main import db, login_manager
 from flask_login import LoginManager, login_user, login_required, logout_user
@@ -32,7 +33,8 @@ def get_user(id):
 def register_user():
     user_fields = user_schema.load(request.json)
     user = User(**user_fields)
-    role = Role.query.filter_by(id=user.roles).first()
+    selected_role = request.json.get("roles")
+    role = Role.query.filter_by(id=selected_role).first()
     user.roles = [role,]
 
     email = user.email

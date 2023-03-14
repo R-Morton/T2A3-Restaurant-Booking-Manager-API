@@ -24,7 +24,12 @@ def register_venue():
 
     venue = Venue(**venue_fields)
 
-    db.session.add(venue)
-    db.session.commit()
+    location = venue.location
+
+    if Venue.query.filter_by(location=location).first():
+        return {"message": "This venue already exists."}
+    else:
+        db.session.add(venue)
+        db.session.commit()
 
     return venue_schema.dump(venue)
