@@ -10,11 +10,15 @@ class User(db.Model, UserMixin):
     password = db.Column(db.String(), nullable=False)
     name = db.Column(db.String())
 
+    role_id = db.Column(
+        db.Integer(), db.ForeignKey("roles.id"))
+
     venue_id = db.Column(
         db.Integer(), db.ForeignKey("venues.id"))
-
+    
     venue = db.relationship('Venue', backref='user')
-    roles = db.relationship('Role', secondary='user_roles')
+    roles = db.relationship('Role', backref='user')
+
 
 class Role(db.Model):
     __tablename__ = 'roles'

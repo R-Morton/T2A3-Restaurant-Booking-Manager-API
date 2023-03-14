@@ -25,11 +25,22 @@ def register_venue():
     venue = Venue(**venue_fields)
 
     location = venue.location
-
-    if Venue.query.filter_by(location=location).first():
-        return {"message": "This venue already exists."}
-    else:
-        db.session.add(venue)
-        db.session.commit()
+    try:
+        if Venue.query.filter_by(location=location).first():
+            return {"message": "This venue already exists."}
+        else:
+            db.session.add(venue)
+            db.session.commit()
+    except:
+        return {"message": "Information is missing, please ensure you have given eveything."}
 
     return venue_schema.dump(venue)
+
+@venue.delete('/delete/<int:id>')
+def venue_delete(id):
+    venue = Venue.query.filter_by(id=id).first()
+    if not venue:
+        return {"message": "Venue does not exist"}
+    db.session.delete(venue)
+    db.session.commit()
+    return {"message": "Venue deleted"}

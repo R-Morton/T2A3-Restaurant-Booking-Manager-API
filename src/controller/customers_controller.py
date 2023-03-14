@@ -20,11 +20,31 @@ def get_customer(id):
 
 @customer.post("/create")
 def create_customer():
-    customer_fields = customer_schema.load(request.json)
+    try:
+        customer_fields = customer_schema.load(request.json)
+        customer = Customer(**customer_fields)
+        mobile = customer.customer_mobile
+        if Customer.query.filter_by(customer_mobile=mobile).first():
+            return {"message": "A customer with this mobile number already exists!"}
+        
+        if int(len(mobile)) < 10:
+            return {"message": "Please enter a valid mobile number"}
+        
+        if '@' not in customer.customer_email:
+            return {"message": "Please enter a valid email"}
+        
+        else:
+            db.session.add(customer)
+            db.session.commit()
+            return customer_schema.dump(customer)
+    except:
+        return {"message": "Looks like some information is missing!"}
 
-    customer = Customer(**customer_fields)
-
-    db.session.add(customer)
+@customer.delete('/delete/<int:id>')
+def customer_delete(id):
+    customer = Customer.query.filter_by(id=id).first()
+    if not customer:
+        return {"message": "Customer does not exist"}
+    db.session.delete(customer)
     db.session.commit()
-
-    return customer_schema.dump(customer)
+    return {"message": "Customer deleted"}

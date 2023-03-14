@@ -53,9 +53,9 @@ def seed_db():
     Admin_user = User(
         email = 'admin@admin.com',
         password = 'password',
-        name = 'admin',)
-    Admin_user.roles = [admin_role,]
-    db.session.add(Admin_user)
+        name = 'admin',
+        role_id = 1)
 
+    db.session.add(Admin_user)
     db.session.commit()
     

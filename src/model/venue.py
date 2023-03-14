@@ -8,4 +8,5 @@ class Venue(db.Model):
     location = db.Column(db.String(), nullable=False, unique=True)
     max_indoor_seating = db.Column(db.Integer(), nullable=False)
     max_outdoor_seating = db.Column(db.Integer(), nullable=False)
-    trading_hours = db.Column(db.String())
+    trading_hours = db.Column(db.String(), nullable=False)
+
