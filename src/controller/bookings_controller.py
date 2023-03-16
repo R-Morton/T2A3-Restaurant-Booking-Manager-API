@@ -5,15 +5,18 @@ from model.customer import Customer
 from model.venue import Venue
 from main import db
 from datetime import datetime
+from flask_jwt_extended import jwt_required
 
 booking = Blueprint('booking', __name__, url_prefix='/bookings')
 
 @booking.get("/")
+@jwt_required()
 def get_bookings():
     bookings = Booking.query.all()
     return bookings_schema.dump(bookings)
 
 @booking.get("/<int:id>")
+@jwt_required()
 def get_booking(id):
     booking = Booking.query.get(id)
 
@@ -22,6 +25,7 @@ def get_booking(id):
     return booking_schema.dump(booking)
 
 @booking.post("/create")
+@jwt_required()
 def create_booking():
     booking_fields = booking_schema.load(request.json)
     booking = Booking(**booking_fields)
@@ -62,6 +66,7 @@ def create_booking():
     return booking_schema.dump(booking)
 
 @booking.delete('/delete/<int:id>')
+@jwt_required()
 def booking_delete(id):
     booking = Booking.query.filter_by(id=id).first()
     if not booking:

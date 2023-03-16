@@ -2,15 +2,21 @@ from flask import Blueprint, request
 from schema.venues_schema import venue_schema, venues_schema
 from model.venue import Venue
 from main import db
+from controller.users_controller import make_secure, admin_only
+from flask_jwt_extended import jwt_required
 
 venue = Blueprint('venue', __name__, url_prefix='/venues')
 
 @venue.get("/")
+@jwt_required()
+@make_secure("Admin","Manager")
 def get_venues():
     venues = Venue.query.all()
     return venues_schema.dump(venues)
 
 @venue.get("/<int:id>")
+@jwt_required()
+@make_secure("Admin","Manager")
 def get_venue(id):
     venue = Venue.query.get(id)
 
@@ -19,6 +25,8 @@ def get_venue(id):
     return venue_schema.dump(venue)
 
 @venue.post("/register")
+@jwt_required()
+@make_secure("Admin")
 def register_venue():
     venue_fields = venue_schema.load(request.json)
 
@@ -37,6 +45,8 @@ def register_venue():
     return venue_schema.dump(venue)
 
 @venue.delete('/delete/<int:id>')
+@jwt_required()
+@make_secure("Admin")
 def venue_delete(id):
     venue = Venue.query.filter_by(id=id).first()
     if not venue:

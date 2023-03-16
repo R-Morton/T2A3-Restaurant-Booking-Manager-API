@@ -33,14 +33,14 @@ def admin_only():
 
 @user.get("/")
 @jwt_required()
-@make_secure("Admin","Manager")
+@make_secure("Admin")
 def get_users():
     users = User.query.all()
     return users_schema.dump(users)
 
 @user.get("/<int:id>")
 @jwt_required()
-@make_secure("Admin","Manager")
+@make_secure("Admin")
 def get_user(id):
     user = User.query.get(id)
 
