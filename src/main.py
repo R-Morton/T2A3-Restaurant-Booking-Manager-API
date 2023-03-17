@@ -12,7 +12,6 @@ def create_app():
     app = Flask(__name__)
 
     app.config.from_object("config.app_config")
-    app.config['SECRET_KEY'] = 'supersecretbruh'
     app.config["JWT_SECRET_KEY"] = "Backend best end"
 
     db.init_app(app)

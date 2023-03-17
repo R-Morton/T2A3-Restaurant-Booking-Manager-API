@@ -10,3 +10,5 @@ class Venue(db.Model):
     max_outdoor_seating = db.Column(db.Integer(), nullable=False)
     trading_hours = db.Column(db.String(), nullable=False)
 
+    booking = db.relationship('Booking', cascade='all, delete')
+

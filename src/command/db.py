@@ -51,7 +51,7 @@ def seed_db():
     db.session.add(Granville_location)
 
     Admin_user = User(
-        email = 'admin@admin.com',
+        email = 'admin@mail.com',
         password = 'password',
         name = 'admin',
         role_id = 1)

@@ -3,9 +3,10 @@ from schema.bookings_schema import booking_schema, bookings_schema
 from model.booking import Booking
 from model.customer import Customer
 from model.venue import Venue
+from model.user import User
 from main import db
 from datetime import datetime
-from flask_jwt_extended import jwt_required
+from flask_jwt_extended import jwt_required, get_jwt_identity
 
 booking = Blueprint('booking', __name__, url_prefix='/bookings')
 
@@ -29,6 +30,12 @@ def get_booking(id):
 def create_booking():
     booking_fields = booking_schema.load(request.json)
     booking = Booking(**booking_fields)
+
+    user_id = get_jwt_identity()
+    user = User.query.get(user_id)
+    if booking.venue_id != user.venue_id:
+        if user.roles.name != 'Admin' and user.roles.name != 'Manager':
+            return {"message": "You are not authorised to make bookings for other venues"}
 
     date_str = booking.booking_date
     date_object = datetime.strptime(date_str, '%Y-%m-%d').date()

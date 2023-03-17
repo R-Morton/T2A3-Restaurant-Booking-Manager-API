@@ -4,7 +4,7 @@ from schema.users_schema import user_schema, users_schema
 from schema.roles_schema import role_schema
 from model.user import User, Role
 from model.venue import Venue
-from main import db, login_manager
+from main import db
 from flask_jwt_extended import get_jwt_identity, create_access_token, jwt_required, JWTManager
 
 user = Blueprint('user', __name__, url_prefix='/users')

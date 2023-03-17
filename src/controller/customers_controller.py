@@ -2,7 +2,7 @@ from flask import Blueprint, request
 from schema.customers_schema import customer_schema, customers_schema
 from model.customer import Customer
 from main import db
-from controller.users_controller import make_secure, admin_only
+from controller.users_controller import make_secure
 from flask_jwt_extended import jwt_required
 
 customer = Blueprint('customer', __name__, url_prefix='/customers')
@@ -23,7 +23,7 @@ def get_customer(id):
     return customer_schema.dump(customer)
 
 @customer.post("/create")
-@jwt_required
+@jwt_required()
 def create_customer():
     try:
         customer_fields = customer_schema.load(request.json)
@@ -45,8 +45,8 @@ def create_customer():
     except:
         return {"message": "Looks like some information is missing!"}
 
-@customer.delete('/delete/<int:id>')
-@jwt_required
+@customer.route('/delete/<int:id>', methods=['DELETE'])
+@jwt_required()
 @make_secure("Admin","Manager")
 def customer_delete(id):
     customer = Customer.query.filter_by(id=id).first()

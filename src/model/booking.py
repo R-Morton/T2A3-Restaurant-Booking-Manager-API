@@ -14,5 +14,5 @@ class Booking(db.Model):
     venue_id = db.Column(db.Integer(), db.ForeignKey("venues.id"), nullable=False)
     customer_id = db.Column(db.Integer(), db.ForeignKey("customers.id"), nullable=False)
 
-    venue = db.relationship('Venue', backref='booking')
-    customer = db.relationship('Customer', backref='booking')
+    venue = db.relationship('Venue', back_populates='booking')
+    customer = db.relationship('Customer', back_populates='booking')

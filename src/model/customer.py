@@ -8,4 +8,5 @@ class Customer(db.Model):
     customer_name = db.Column(db.String(), nullable=False)
     customer_mobile = db.Column(db.String(), nullable=False, unique=True)
     customer_email = db.Column(db.String(), nullable=False)
-    
+
+    booking = db.relationship('Booking', cascade='all, delete')
