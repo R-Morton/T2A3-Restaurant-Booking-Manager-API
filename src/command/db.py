@@ -7,16 +7,21 @@ from model.customer import Customer
 
 db_cmd = Blueprint("db", __name__)
 
+
+# CLI command that creates all tables
 @db_cmd.cli.command('create')
 def create_db():
     db.create_all()
     print("Tables created")
 
+# CLI command that drops all the tables
 @db_cmd.cli.command('drop')
 def drop_db():
     db.drop_all()
     print("Tables dropped")
 
+
+# CLI command that seeds the tables with roles for staff, creates an admin account and adds in 3 venues to start off with.
 @db_cmd.cli.command('seed')
 def seed_db():
     admin_role = Role(name='Admin')
@@ -58,4 +63,5 @@ def seed_db():
 
     db.session.add(Admin_user)
     db.session.commit()
+    print("Tables seeded")
     

@@ -7,12 +7,14 @@ from flask_jwt_extended import jwt_required
 
 customer = Blueprint('customer', __name__, url_prefix='/customers')
 
+# Shows all customers in the database
 @customer.get("/")
 @jwt_required()
 def get_customers():
     customers = Customer.query.all()
     return customers_schema.dump(customers)
 
+# Shows customers by id given in the route
 @customer.get("/<int:id>")
 @jwt_required()
 def get_customer(id):
@@ -22,6 +24,7 @@ def get_customer(id):
         return {"message": "Customer does not exist"}
     return customer_schema.dump(customer)
 
+# Endpoint for creating a customer
 @customer.post("/create")
 @jwt_required()
 def create_customer():
@@ -29,12 +32,15 @@ def create_customer():
         customer_fields = customer_schema.load(request.json)
         customer = Customer(**customer_fields)
         mobile = customer.customer_mobile
+        # Checking to ensure no duplicate customers exist, using mobile number
         if Customer.query.filter_by(customer_mobile=mobile).first():
             return {"message": "A customer with this mobile number already exists!"}
         
+        # Checking the mobile number is valid
         if int(len(mobile)) < 10:
             return {"message": "Please enter a valid mobile number"}
         
+        # Basic error checking to ensure the email is valid with an '@'
         if '@' not in customer.customer_email:
             return {"message": "Please enter a valid email"}
         
@@ -45,6 +51,7 @@ def create_customer():
     except:
         return {"message": "Looks like some information is missing!"}
 
+#Endpoint for deleting a customer by id
 @customer.route('/delete/<int:id>', methods=['DELETE'])
 @jwt_required()
 @make_secure("Admin","Manager")

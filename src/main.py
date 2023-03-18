@@ -8,6 +8,7 @@ db = SQLAlchemy()
 ma = Marshmallow()
 jwt = JWTManager()
 
+#Initializes a flask instance, connecting all config data
 def create_app():
     app = Flask(__name__)
 
