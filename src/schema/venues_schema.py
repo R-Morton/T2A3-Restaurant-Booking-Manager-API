@@ -2,7 +2,7 @@ from main import ma
 
 class VenueSchema(ma.Schema):
     class Meta:
-        fields = ("id", "location", "max_indoor_seating", "max_outdoor_seating", "trading_hours", "user")
+        fields = ("id", "location", "max_indoor_seating", "max_outdoor_seating", "trading_hours", "user", "current_indoor_seating")
     
     user = ma.List(ma.Nested("UserSchema", exclude=["venue"]))
 

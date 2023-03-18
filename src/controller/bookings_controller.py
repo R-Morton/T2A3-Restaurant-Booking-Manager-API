@@ -48,6 +48,7 @@ def create_booking():
     if not Venue.query.filter_by(id=booking.venue_id).all():
         return {"message": "Venue not found. Please enter a valid venue"}
     
+    
     selected_venue = Venue.query.filter_by(id=booking.venue_id).first()
     venue_trading_hours = selected_venue.trading_hours
     open_time = venue_trading_hours[0:4]
@@ -59,6 +60,7 @@ def create_booking():
                 return {"message": "Please select a valid time"}
         count += 1
 
+
     if int(booking.booking_time) >= int(open_time) or int(booking.booking_time) <= 1145:
         booking.booking_service = "Breakfast"
     elif int(booking.booking_time) >= 1200 or int(booking.booking_time) <= 1530:
@@ -67,17 +69,23 @@ def create_booking():
         booking.booking_service = "Dinner"
     else:
         return {"message": "Please choose a time during opening hours"}
+    
+
     db.session.add(booking)
     db.session.commit()
-
     return booking_schema.dump(booking)
 
 @booking.delete('/delete/<int:id>')
 @jwt_required()
 def booking_delete(id):
     booking = Booking.query.filter_by(id=id).first()
+    selected_venue = Venue.query.filter_by(id=booking.venue_id).first()
     if not booking:
         return {"message": "Booking does not exist"}
     db.session.delete(booking)
     db.session.commit()
+    selected_venue.current_indoor_seating += booking.booking_pax
+    db.session.add(selected_venue)
+    db.session.commit()
+
     return {"message": "Booking deleted"}

@@ -84,11 +84,9 @@ def user_login():
         return {"message": "user not found"}
     else:
         access_token = create_access_token(identity=str(user.id))
-        return jsonify(access_token)
+        return jsonify({"user":user.email, "token": access_token })
 
-@user.route('/logout')
-def user_logout():
-    return {"message": "You are now logged out"}
+
 
 @user.delete('/delete/<int:id>')
 @jwt_required()
