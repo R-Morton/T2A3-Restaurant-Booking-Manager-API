@@ -57,31 +57,34 @@ def get_user(id):
 @jwt_required()
 @make_secure("Admin","Manager")
 def register_user():
-    user_fields = user_schema.load(request.json)
-    user = User(** user_fields)
-    email = user.email
+    try:
+        user_fields = user_schema.load(request.json)
+        user = User(** user_fields)
+        email = user.email
 
-    # Stops non admins from creating an admin account
-    if user.role_id == 1:
-        if admin_only() == False:
-            return {"message": "Only admins can create an admin account"}
-    
-    #Basic error checking to ensure an '@' is in the email field
-    if '@' not in user.email:
-        return {"message": "Please enter a valid email"}
-    
-    # Checking the foreign key of the venue id exists
-    if not Venue.query.filter_by(id=user.venue_id).all():
-        return {"message": "Venue not found. Please enter a valid venue"}
+        # Stops non admins from creating an admin account
+        if user.role_id == 1:
+            if admin_only() == False:
+                return {"message": "Only admins can create an admin account"}
+        
+        #Basic error checking to ensure an '@' is in the email field
+        if '@' not in user.email:
+            return {"message": "Please enter a valid email"}
+        
+        # Checking the foreign key of the venue id exists
+        if not Venue.query.filter_by(id=user.venue_id).all():
+            return {"message": "Venue not found. Please enter a valid venue"}
 
-    # Error checking for duplicate user
-    if User.query.filter_by(email=email).first():
-        return {"message": "This email address is already in use. Please login"}
-    else:
-        db.session.add(user)
-        db.session.commit()
+        # Error checking for duplicate user
+        if User.query.filter_by(email=email).first():
+            return {"message": "This email address is already in use. Please login"}
+        else:
+            db.session.add(user)
+            db.session.commit()
 
-        return user_schema.dump(user)
+            return user_schema.dump(user)
+    except:
+        return {"message": "Looks like some information is missing"}
 
 # Endpoint that generates a JWT key if login is successful.
 @user.post('/login')

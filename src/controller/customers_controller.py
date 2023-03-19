@@ -49,7 +49,7 @@ def create_customer():
             db.session.commit()
             return customer_schema.dump(customer)
     except:
-        return {"message": "Looks like some information is missing!"}
+        return {"message": "Looks like some information is missing"}
 
 #Endpoint for deleting a customer by id
 @customer.route('/delete/<int:id>', methods=['DELETE'])

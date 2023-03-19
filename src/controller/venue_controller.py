@@ -31,38 +31,35 @@ def get_venue(id):
 @jwt_required()
 @make_secure("Admin")
 def register_venue():
-    venue_fields = venue_schema.load(request.json)
+    try:
+        venue_fields = venue_schema.load(request.json)
+        venue = Venue(**venue_fields)
+        location = venue.location
 
-    venue = Venue(**venue_fields)
+        #Error checking to ensure trading hours field format is correct
+        if len(venue.trading_hours) != 9:
+            return {"message": "Please enter a valid trading hours time. XXXX-XXXX"}
 
-    location = venue.location
-
-    #Error checking to ensure trading hours field format is correct
-    if len(venue.trading_hours) != 9:
-        return {"message": "Please enter a valid trading hours time. XXXX-XXXX"}
-
-    if Venue.query.filter_by(location=location).first():
-        return {"message": "This venue already exists."}
-    else:
+        if Venue.query.filter_by(location=location).first():
+            return {"message": "This venue already exists."}
+        
+        #Error checking to ensure trading hours field format is correct
+        string_numbers = ['0','1','2','3','4','5','6','7','8','9','-']
+        count = 0
+        for x in venue.trading_hours:
+            if count <= 3 or count >= 5:
+                if x not in string_numbers[0:9]:
+                    return {"message": "Please enter a valid trading hours time. XXXX-XXXX"}
+            if count == 4:
+                if x not in string_numbers[10]:
+                    return {"message": "Please enter a valid trading hours time. XXXX-XXXX"}
+            count += 1
+        
         db.session.add(venue)
         db.session.commit()
-    
-    #Error checking to ensure trading hours field format is correct
-    string_numbers = ['0','1','2','3','4','5','6','7','8','9','-']
-    count = 0
-    for x in venue.trading_hours:
-        if count <= 3 or count >= 5:
-            if x not in string_numbers[0:9]:
-                return {"message": "Please enter a valid trading hours time. XXXX-XXXX"}
-        if count == 4:
-            if x not in string_numbers[10]:
-                return {"message": "Please enter a valid trading hours time. XXXX-XXXX"}
-        count += 1
-                
-
-                
-
-    return venue_schema.dump(venue)
+        return venue_schema.dump(venue)
+    except:
+        return {"message": "Looks like some information is missing"}
 
 #End point to delete venue using id.
 @venue.delete('/delete/<int:id>')
