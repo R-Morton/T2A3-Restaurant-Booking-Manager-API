@@ -100,7 +100,7 @@ def user_login():
 # Endpoint to delete users by id.
 @user.delete('/delete/<int:id>')
 @jwt_required()
-@make_secure("Admin","Manager")
+@make_secure("Admin")
 def user_delete(id):
     user = User.query.filter_by(id=id).first()
     if not user:
