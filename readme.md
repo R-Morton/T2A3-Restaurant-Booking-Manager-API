@@ -25,11 +25,14 @@ https://trello.com/b/22MZcu97
 ## Installation
 
 Install all the requirements from the requirements.txt in the src folder using the line
-```python:pip install requirements.txt```
+
+```pip install requirements.txt```
 Then execute this to create the tables
-```python:flask db create```
+
+```flask db create```
 Then seed the tables
-```python:flask db seed```
+
+```flask db seed```
 
 The following third party applications are used -
 
